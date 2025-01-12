@@ -46,55 +46,36 @@ class MainActivity : ComponentActivity() {
     //https://stackoverflow.com/questions/75741759/android-aidl-ipc-unable-to-call-service
 
 
-    val textToDisplay = mutableStateOf("")
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val activityFinish = { this.finish()}
-
-        val message = getString(R.string.main_activity_received) +
-                getString(R.string.main_activity_space) +
-                intent.getStringExtra(AppConstants.MESSAGE_KEY)
-
-        textToDisplay.value = message.toString()
-
         setContent {
             MessengerInterProcessCommunicationServerApplicationTheme {
 
-                    AppMessengerServer(textToDisplay = textToDisplay, activityFinish = activityFinish)
+                    AppMessengerServer()
 
             }
         }
-
-
 
     }
 }
 
 @Composable
-fun AppMessengerServer(textToDisplay: MutableState<String>, activityFinish: () -> Unit) {
+fun AppMessengerServer() {
     Scaffold(modifier = Modifier.fillMaxSize().systemBarsPadding()) { innerPadding ->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center){
 
-            MainBody(textToDisplay = textToDisplay, activityFinish = activityFinish)
+            MainBody()
 
         }
     }
 }
 
 @Composable
-fun MainBody(textToDisplay: MutableState<String>, activityFinish: () -> Unit) {
-
-    var inputValue = rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(""))
-    }
-
-    val context = LocalContext.current
-
+fun MainBody() {
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -104,39 +85,6 @@ fun MainBody(textToDisplay: MutableState<String>, activityFinish: () -> Unit) {
 
         Text(text = stringResource(id = R.string.main_activity_inter_process_communication))
         Text(text = stringResource(id = R.string.main_activity_messenger_server))
-
-        Text(textToDisplay.value, color = Color.Green)
-
-        OutlinedTextField(
-            modifier = Modifier
-                .padding(5.dp)
-                .fillMaxWidth(),
-            value = inputValue.value,
-            onValueChange = {
-                inputValue.value = it
-            },
-            label = {
-                Text(text = stringResource(R.string.main_activity_value_to_send))
-            }
-
-        )
-
-        Button(colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
-            onClick = {
-
-                GlobalScope.launch(Dispatchers.IO) {
-
-                    MessengerServer.sendMessageToClient(inputValue.value.text.toString())
-                    activityFinish()
-
-                }
-
-
-            }) {
-
-            Text(text = stringResource(id = R.string.main_activity_send))
-
-        }
 
     }
 }

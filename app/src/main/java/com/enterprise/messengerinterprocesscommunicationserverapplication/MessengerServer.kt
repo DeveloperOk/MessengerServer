@@ -2,6 +2,9 @@ package com.enterprise.messengerinterprocesscommunicationserverapplication
 
 import android.content.Context
 import android.content.Intent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.CountDownLatch
 
 class MessengerServer {
@@ -10,12 +13,13 @@ class MessengerServer {
 
         public fun handleIncomingRequest(context: Context, message: String?){
 
-            val intentToLaunch = Intent(context, MainActivity::class.java)
+            GlobalScope.launch(Dispatchers.IO) {
 
-            intentToLaunch.putExtra(AppConstants.MESSAGE_KEY, message)
-            intentToLaunch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                val replyMessage = "$message Success"
 
-            context.startActivity(intentToLaunch)
+                MessengerServer.sendMessageToClient(replyMessage)
+
+            }
 
         }
 

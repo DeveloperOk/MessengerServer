@@ -6,8 +6,6 @@ class AppConstants {
 
         const val DATA : String = "DATA"
 
-        const val MESSAGE_KEY : String = "MESSAGE_KEY"
-
     }
 
 }
