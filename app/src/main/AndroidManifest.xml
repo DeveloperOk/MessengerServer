@@ -12,9 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MessengerInterProcessCommunicationServerApplication"
         tools:targetApi="31">
+
+        <!-- Messenger Inter Process Communication -->
+        <service
+            android:name=".MessengerIPCServerService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <!--excludeFromRecents and noHistory was added -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.MessengerInterProcessCommunicationServerApplication">
             <intent-filter>
