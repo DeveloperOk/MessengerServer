@@ -19,7 +19,7 @@ class MessengerServer {
 
         }
 
-        public fun sendMessageToClient(message: String?){
+        public suspend fun sendMessageToClient(message: String?){
 
             MessengerIPCServerService.messageToSend = message.toString()
 
